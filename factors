@@ -31,7 +31,7 @@ def main(numbers=[]):
                 raise ValueError
             get_factors(int(num))
         except ValueError:
-            continue
+            exit(-1)
         
 
 if __name__ == "__main__":
@@ -39,11 +39,11 @@ if __name__ == "__main__":
     argc = len(argv)
     if argc != 2:
         sys.stderr.write("USAGE: {} <file>\n".format(argv[0]))
-        sys.exit(-1)
+        exit(-1)
     try:
         with open(argv[1], "r") as f:
             numbers = f.read().strip().split("\n")
             main(numbers)
     except (FileNotFoundError) as err:
         sys.stderr.write("ERROR: {}\n".format(err))
-        sys.exit(-1)
+        exit(-1)
