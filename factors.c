@@ -66,7 +66,7 @@ int main(int ac, char *av[])
 		if (is_empty(buf, wc))
 			continue;
 		num = atoi(buf);
-		if (num == 0 || num == 1)
+		if (num <= 1)
 			continue;
 		if ((get_factors(num)) == -1)
 			exit(EXIT_FAILURE);
