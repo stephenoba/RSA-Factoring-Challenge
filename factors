@@ -6,6 +6,7 @@ try:
     from data import primenumbers
 except ModuleNotFoundError:
     primenumbers = [2, 3, 5, 7]
+    exit(-1)
 
 def get_next_primenumber(idx, num):
     """get the next primenumber and append to primenumbers"""
