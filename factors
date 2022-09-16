@@ -3,35 +3,35 @@
 # Stephen Oba <obastepheno@gmail.com>
 import sys
 
+primenumbers = [2, 3, 5, 7]
+
+def get_next_primenumber(idx, num):
+    """get the next primenumber and append to primenumbers"""
+    try:
+        nxt = primenumbers[idx]
+        return nxt
+    except IndexError:
+        prev_num = primenumbers[-1]
+        for i in range(prev_num+2, int(num ** 0.5), 2):
+            root = i ** 0.5
+            for j in primenumbers:
+                if j > root:
+                    break
+                if i % j == 0:
+                    break
+            if i % j != 0:
+                nxt = i
+                primenumbers.append(i)
+                return nxt
+
 def get_factors(num):
-    prime_numbers = [
-             	2, 3, 5, 7, 11, 13, 17, 19, 23, 29,
-                31, 37, 41, 43, 47, 53, 59, 61, 67,
-                71, 73, 79, 83, 89, 97, 101, 103, 107,
-                109, 113, 127, 131, 137, 139,
-                149, 151, 157, 163, 167, 173,
-                179, 181, 191, 193, 197, 199,
-                211, 223, 227, 229, 233, 239,
-                241, 251, 257, 263, 269, 271,
-                277, 281, 283, 293, 307, 311, 
-                313, 317, 331, 337, 347, 349, 
-                353, 359, 367, 373, 379, 383, 
-                389, 397, 401, 409, 419, 421, 
-                431, 433, 439, 443, 449, 457, 
-                461, 463, 467, 479, 487, 491, 
-                499, 503, 509, 521, 523, 541, 
-                547, 557, 563, 569, 571, 577, 
-                587, 593, 599, 601, 607, 613, 
-                617, 619, 631, 641, 643, 647, 
-                653, 659, 661, 673, 677, 683, 
-                691, 701, 709, 719, 727, 733, 
-                739, 743, 751, 757, 761, 769, 
-                773, 787, 797
-                ]
-    for p in prime_numbers:
-        if num % p == 0:
-            print("{}={}*{}".format(num, num // p, p))
+    x = 0
+    while True:
+        prime_num = get_next_primenumber(x, num)
+        if num % prime_num == 0:
+            print("{}={}*{}".format(num, num // prime_num, prime_num))
             return True
+        x += 1
     return False
 
 def main(numbers=[]):
@@ -42,7 +42,7 @@ def main(numbers=[]):
             num = int(i)
             if num <= 1:
                 raise ValueError
-            get_factors(int(num))
+            get_factors(num)
         except ValueError:
             exit(-1)
         
