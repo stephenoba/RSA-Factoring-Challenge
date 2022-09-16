@@ -1,9 +1,5 @@
 #include "factors.h"
 
-int div(char *a, int b):
-{
-}
-
 /**
  * get_factors - compute factors of a given integer
  * @num: integer
@@ -13,32 +9,47 @@ int div(char *a, int b):
  * Description: every whole number larger than 1 can be
  * uniquely expressed as the product of its prime numbers
  */
-int get_factors(const unsigned long long num)
+int get_factors(char *num, prime_t *head, prime_t *tail)
 {
-	/* Array of prime numbers from 1 - 100 */
-	unsigned long long prime_numbers[] = {
-		2, 3, 5, 7, 11, 13, 17, 19,
-		23, 29, 31, 37, 41, 43, 47,
-		53, 59, 61, 67, 71, 73, 79,
-		83, 89, 97, 101, 103, 107,
-		109, 113, 127, 131, 137, 139,
-		149, 151, 157, 163, 167, 173,
-		179, 181, 191, 193, 197, 199,
-		211, 223, 227, 229, 233, 239,
-		241, 251, 257, 263, 269, 271,
-		277, 281, 283, 293
-	};
-	int i;
-	unsigned long long p;
+	prime_t *primenumber, *temp;
+	char *quo, *denom;
+	unsigned long remainder = 0, i;
+	int flag = 1;
 
-	for (i = 0; i < 25; i++)
+	denom = strdup(num);
+	primenumber = head;
+	while (flag)
 	{
-		p = prime_numbers[i];
-		if (num % p == 0)
+		quo = division(denom, primenumber->n, &remainder);
+		if (remainder == 0)
 		{
-			printf("%lld=%lld*%lld\n", num, num/p, p);
+			printf("%s=%s*%lu\n", denom, quo, primenumber->n);
 			return (0);
 		}
+		if (primenumber->next == NULL)
+		{
+			i = primenumber->n + 2;
+			while (i < (primenumber->n + 100))
+			{
+				temp = head;;
+				while (temp->next)
+				{
+					printf("%lu -- %lu = %lu\n", i, temp->n, i % temp->n);
+					if (i % temp->n == 0)
+					{
+						break;
+					}
+					temp = temp->next;
+				}
+				if (i % temp->n != 0)
+				{
+					add_node(&tail, i);
+					break;
+				}
+				i += 2;
+			}
+		}
+		primenumber = primenumber->next;
 	}
 	return (-1);
 }
@@ -56,8 +67,12 @@ int main(int ac, char *av[])
 	char *buf = NULL;
 	size_t len = 0;
 	ssize_t wc;
-	unsigned long long num;
-
+	prime_t *head = NULL, *tail = NULL;
+	
+	head = add_node(&tail, 2);
+	add_node(&tail, 3);
+	add_node(&tail, 5);
+	add_node(&tail, 7);
 	if (ac != 2)
 	{
 		fprintf(stderr, "USAGE: %s <file>\n", av[0]);
@@ -74,9 +89,12 @@ int main(int ac, char *av[])
 	while ((wc = getline(&buf, &len, stream)) != -1)
 	{
 		buf[strcspn(buf, "\n")] = '\0';
-		num = atoi(buf);
-		if ((get_factors(num)) == -1)
+		if ((get_factors(buf, head, tail)) == -1)
 			exit(EXIT_FAILURE);
+		/* REMOVE PRINT */
+	       /*	
+		printf("%s %% %lu\n", division(buf, head->n, &remainder), remainder);
+		*/
 	}
 	free(buf);
 	fclose(stream);
