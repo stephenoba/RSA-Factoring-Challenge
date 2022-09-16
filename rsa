@@ -1,0 +1,72 @@
+#!/usr/bin/python3
+# main.py
+# Stephen Oba <obastepheno@gmail.com>
+import sys
+
+primenumbers = [2, 3, 5, 7]
+
+def get_next_primenumber(idx, num):
+    """get the next primenumber and append to primenumbers"""
+    try:
+        nxt = primenumbers[idx]
+        return nxt
+    except IndexError:
+        prev_num = primenumbers[-1]
+        for i in range(prev_num+2, int(num ** 0.5)+1, 2):
+            root = i ** 0.5
+            for j in primenumbers:
+                if j > root:
+                    break
+                if i % j == 0:
+                    break
+            if i % j != 0:
+                nxt = i
+                primenumbers.append(i)
+                return nxt
+
+def isprime(num):
+    if num == 2 or num == 3:
+        return True
+    if num % 2 == 0:
+        return False
+    for n in range(3,int(num**0.5)+1, 2):
+        if num % n==0:
+            return False
+    return True
+
+def get_factors(num):
+    x = 0
+    while True:
+        prime_num = get_next_primenumber(x, num)
+        if num % prime_num == 0 and isprime(num // prime_num):
+            print("{}={}*{}".format(num, num // prime_num, prime_num))
+            return True
+        x += 1
+    return False
+
+def main(numbers=[]):
+    if not numbers:
+        sys.exit(0)
+    for i in numbers:
+        try:
+            num = int(i)
+            if num <= 1:
+                raise ValueError
+            get_factors(num)
+        except ValueError:
+            exit(-1)
+        
+
+if __name__ == "__main__":
+    argv = sys.argv
+    argc = len(argv)
+    if argc != 2:
+        sys.stderr.write("USAGE: {} <file>\n".format(argv[0]))
+        exit(-1)
+    try:
+        with open(argv[1], "r") as f:
+            numbers = f.read().strip().split("\n")
+            main(numbers)
+    except (FileNotFoundError) as err:
+        sys.stderr.write("ERROR: {}\n".format(err))
+        exit(-1)
